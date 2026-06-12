@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [2.4.2] — 2026-06-12
+
+### Fixed
+- **Uninstaller**: granting Full Disk Access now actually works. The app
+  registers itself with the system first, so it appears (with a toggle) in the
+  System Settings list instead of opening to a list it isn't in, and a short
+  hint explains how to enable it
+
 ## [2.4.1] — 2026-06-12
 
 ### Fixed

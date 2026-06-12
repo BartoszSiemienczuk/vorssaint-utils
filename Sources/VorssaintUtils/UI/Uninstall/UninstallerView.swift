@@ -75,15 +75,23 @@ struct UninstallerView: View {
     }
 
     private var fullDiskAccessNote: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "info.circle").foregroundStyle(.secondary)
-            Text(l10n.s.uninstallerFDANote)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Button(l10n.s.permissionOpenSettings) { permissions.openFullDiskAccessSettings() }
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "info.circle").foregroundStyle(.secondary)
+                Text(l10n.s.uninstallerFDANote)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Text(l10n.s.uninstallerFDAHint)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(l10n.s.uninstallerFDAGrant) { permissions.requestFullDiskAccess() }
                 .controlSize(.small)
         }
-        .padding(10)
+        .padding(11)
+        .frame(width: 360)
         .background(RoundedRectangle(cornerRadius: 9, style: .continuous).fill(Color.primary.opacity(0.05)))
     }
 

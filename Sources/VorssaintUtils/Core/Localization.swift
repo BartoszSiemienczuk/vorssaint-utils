@@ -209,6 +209,8 @@ struct Strings {
     let uninstallerChoose: String
     let uninstallerEmptyNote: String
     let uninstallerFDANote: String
+    let uninstallerFDAGrant: String
+    let uninstallerFDAHint: String
     let uninstallerScanning: String
     let uninstallerRemoving: String
     let uninstallerFoundTitle: String
@@ -478,6 +480,8 @@ extension Strings {
         uninstallerChoose: "Escolher app…",
         uninstallerEmptyNote: "Nada é removido sem a sua confirmação.",
         uninstallerFDANote: "Conceda Acesso Total ao Disco para uma análise mais completa.",
+        uninstallerFDAGrant: "Conceder acesso…",
+        uninstallerFDAHint: "Ative o Vorssaint Utils na lista que abrir (arraste-o ou use o + se não aparecer). O macOS vai pedir para reabrir o app.",
         uninstallerScanning: "Analisando arquivos…",
         uninstallerRemoving: "Movendo para a Lixeira…",
         uninstallerFoundTitle: "encontrado",
@@ -741,6 +745,8 @@ extension Strings {
         uninstallerChoose: "Choose app…",
         uninstallerEmptyNote: "Nothing is removed without your confirmation.",
         uninstallerFDANote: "Grant Full Disk Access for a more thorough scan.",
+        uninstallerFDAGrant: "Grant access…",
+        uninstallerFDAHint: "Turn on Vorssaint Utils in the list that opens (drag it in or use + if it isn't there). macOS will ask to reopen the app.",
         uninstallerScanning: "Scanning files…",
         uninstallerRemoving: "Moving to the Trash…",
         uninstallerFoundTitle: "found",

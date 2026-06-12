@@ -33,8 +33,11 @@ struct UninstallerSettings: View {
                         Text(l10n.s.uninstallerFDANote)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Button(l10n.s.permissionOpenSettings) {
-                            permissions.openFullDiskAccessSettings()
+                        Text(l10n.s.uninstallerFDAHint)
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                        Button(l10n.s.uninstallerFDAGrant) {
+                            permissions.requestFullDiskAccess()
                         }
                         .controlSize(.small)
                     }

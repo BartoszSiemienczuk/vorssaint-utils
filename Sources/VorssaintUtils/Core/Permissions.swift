@@ -70,6 +70,29 @@ final class Permissions: ObservableObject {
         open(pane: "Privacy_AllFiles")
     }
 
+    /// Full Disk Access has no prompt API, and an app only shows up (toggled
+    /// off) in its System Settings list once it has *attempted* to read a
+    /// protected location. So touch a few data-vault paths to register the app,
+    /// then open the pane — now the toggle is there to flip on.
+    func requestFullDiskAccess() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let home = NSHomeDirectory()
+            let fm = FileManager.default
+            let probes = [
+                "Library/Application Support/com.apple.TCC/TCC.db",
+                "Library/Safari",
+                "Library/Cookies",
+                "Library/Application Support/MobileSync",
+            ].map { (home as NSString).appendingPathComponent($0) }
+            // The denied attempt itself is what registers the app with TCC.
+            for path in probes {
+                _ = try? fm.contentsOfDirectory(atPath: path)
+                if let handle = FileHandle(forReadingAtPath: path) { try? handle.close() }
+            }
+            DispatchQueue.main.async { self.openFullDiskAccessSettings() }
+        }
+    }
+
     private func open(pane: String) {
         let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)")!
         NSWorkspace.shared.open(url)
