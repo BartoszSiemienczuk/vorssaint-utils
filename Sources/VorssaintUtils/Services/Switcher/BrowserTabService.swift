@@ -128,9 +128,10 @@ final class BrowserTabService {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8, execute: work)
     }
 
-    /// Makes `tab` the current tab of its window. Runs the script off-main;
-    /// the caller raises the window/app afterwards on its own.
-    func activate(_ tab: BrowserTab, completion: @escaping () -> Void) {
+    /// Makes `tab` the current tab of its window, off-main and fire-and-forget.
+    /// The caller raises the window itself (immediately), so this never gates
+    /// the visible switch on Apple Events latency.
+    func selectTab(_ tab: BrowserTab) {
         let source: String
         switch Self.supported[tab.bundleId] {
         case .safari:
@@ -154,18 +155,9 @@ final class BrowserTabService {
             end timeout
             """
         case nil:
-            completion()
             return
         }
-        queue.async {
-            _ = Self.runAppleScript(source)
-            DispatchQueue.main.async {
-                completion()
-                // The activation flipped which tab is current — re-sweep so the
-                // next quick ⌘Tab toggles back correctly.
-                self.refresh { _ in }
-            }
-        }
+        queue.async { _ = Self.runAppleScript(source) }
     }
 
     // MARK: - Enumeration scripts

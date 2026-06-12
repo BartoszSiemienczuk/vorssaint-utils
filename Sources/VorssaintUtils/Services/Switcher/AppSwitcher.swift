@@ -31,6 +31,15 @@ final class AppSwitcher: ObservableObject {
     /// Mouse position when the panel appeared; hover is inert until it moves.
     private var hoverAnchor: NSPoint?
 
+    /// Most-recently-used order of switchable items (windows AND browser tabs),
+    /// most recent first. This is what makes a tab behave like an app: ⌘Tab
+    /// toggles to the last item used, even another tab of the same browser.
+    /// Driven by the switcher's own commits (see `recordUse`).
+    private var itemMRU: [String] = []
+    /// The on-screen item when the current session opened — becomes the
+    /// second-most-recent item on commit, so a flick toggles straight back.
+    private var sessionStartItemID: String?
+
     // The switcher always takes over ⌘Tab to replace the system switcher.
     private let modifierFlag = CGEventFlags.maskCommand
     private let conflictingFlag = CGEventFlags.maskAlternate
@@ -173,9 +182,11 @@ final class AppSwitcher: ObservableObject {
 
         // Render immediately with cached tab data (kept warm by app-activation
         // sweeps); a fresh scripting sweep lands shortly after and re-merges.
-        let list = WindowEnumerator.mergingTabs(baseWindows, tabs: BrowserTabService.shared.cachedIfEnabled)
+        let merged = WindowEnumerator.mergingTabs(baseWindows, tabs: BrowserTabService.shared.cachedIfEnabled)
+        let list = orderedForSession(merged)
 
         windows = list
+        sessionStartItemID = currentItemID(in: list)
         grid = SwitcherGrid.compute(count: list.count, on: screenWithMouse())
         previews = Dictionary(uniqueKeysWithValues: list.compactMap { item in
             item.previewWindowID.flatMap { id in
@@ -183,7 +194,9 @@ final class AppSwitcher: ObservableObject {
             }
         })
         userNavigated = false
-        selectedIndex = initialSelectionIndex(in: list, reversed: reversed)
+        // Index 0 is the on-screen item; index 1 is the most-recently-used
+        // other item — the toggle target. Shift starts from the far end.
+        selectedIndex = reversed ? max(0, list.count - 1) : (list.count > 1 ? 1 : 0)
         sessionActive = true
 
         WindowPreviewProvider.shared.refreshPreviews(for: list) { [weak self] windowID, image in
@@ -195,45 +208,63 @@ final class AppSwitcher: ObservableObject {
         scheduleShowPanel()
     }
 
-    /// Where ⌘Tab lands by default: the previous app when there is one, and
-    /// otherwise the next entry of the current app — so a quick flick toggles
-    /// between two apps, or between two tabs/windows when a single app is open.
-    private func initialSelectionIndex(in list: [SwitcherItem], reversed: Bool) -> Int {
-        guard list.count > 1 else { return 0 }
-        if reversed { return list.count - 1 }
-
-        let frontPid = AppActivationTracker.shared.frontmostPid
-        if let frontPid, let firstOther = list.firstIndex(where: { $0.pid != frontPid }) {
-            return firstOther
-        }
-        // Single app: skip the entry the user is looking at (its frontmost
-        // window, or that window's active tab) and pick the next one.
-        if let current = currentItemIndex(in: list, frontPid: frontPid),
-           let next = list.indices.first(where: { $0 != current }) {
-            return next
-        }
-        return 1
+    /// Orders a session's items so the on-screen item is first and the rest
+    /// follow most-recently-used order (tabs included), falling back to the
+    /// app-activation order the enumerator already applied. This is what lets
+    /// ⌘Tab toggle between two tabs of the same browser, not just two apps.
+    private func orderedForSession(_ items: [SwitcherItem]) -> [SwitcherItem] {
+        let currentID = currentItemID(in: items)
+        return items.enumerated()
+            .sorted { lhs, rhs in
+                sortKey(lhs.element, currentID: currentID, original: lhs.offset)
+                    < sortKey(rhs.element, currentID: currentID, original: rhs.offset)
+            }
+            .map(\.element)
     }
 
-    /// The entry representing what is on screen right now: the first MRU item
-    /// of the frontmost app — for a tabbed browser window, its active tab.
-    private func currentItemIndex(in list: [SwitcherItem], frontPid: pid_t?) -> Int? {
-        list.firstIndex { item in
+    /// Sort key: on-screen item first (0), then items seen in the MRU by
+    /// recency (1, rank), then everything else in its incoming order (2).
+    private func sortKey(_ item: SwitcherItem, currentID: String?, original: Int) -> (Int, Int, Int) {
+        if item.id == currentID { return (0, 0, 0) }
+        if let rank = itemMRU.firstIndex(of: item.id) { return (1, rank, 0) }
+        return (2, 0, original)
+    }
+
+    /// The id of the item on screen right now: the frontmost app's active tab,
+    /// or its frontmost window.
+    private func currentItemID(in items: [SwitcherItem]) -> String? {
+        let frontPid = AppActivationTracker.shared.frontmostPid
+        let current = items.first { item in
             if let frontPid, item.pid != frontPid { return false }
             switch item.kind {
             case .window: return true
             case let .browserTab(tab): return tab.isActive
             }
         }
+        return current?.id ?? items.first?.id
+    }
+
+    /// Records a switch into the item MRU: the activated item moves to the
+    /// front and the item the user came from becomes second, so the very next
+    /// ⌘Tab toggles straight back — the standard most-recently-used behavior,
+    /// now at tab granularity.
+    private func recordUse(_ activatedID: String) {
+        itemMRU.removeAll { $0 == activatedID }
+        itemMRU.insert(activatedID, at: 0)
+        if let previous = sessionStartItemID, previous != activatedID {
+            itemMRU.removeAll { $0 == previous }
+            itemMRU.insert(previous, at: 1)
+        }
+        // Bound the history so closed tabs/windows don't accumulate forever.
+        if itemMRU.count > 64 { itemMRU.removeLast(itemMRU.count - 64) }
     }
 
     /// Re-merges the item list when the live tab sweep finishes. A selection
-    /// the user already moved is kept by id; the default selection is
-    /// recomputed so it stays meaningful (e.g. the other tab appears and
-    /// becomes the toggle target before the user releases ⌘).
+    /// the user already moved is kept by id; otherwise the default toggle
+    /// target is recomputed so the other tab can appear before ⌘ is released.
     private func applyFreshTabs(_ tabs: [BrowserTab], baseWindows: [SwitcherItem]) {
         guard sessionActive else { return }
-        let merged = WindowEnumerator.mergingTabs(baseWindows, tabs: tabs)
+        let merged = orderedForSession(WindowEnumerator.mergingTabs(baseWindows, tabs: tabs))
         guard merged != windows else { return }
 
         let selectedID = windows.indices.contains(selectedIndex) ? windows[selectedIndex].id : nil
@@ -244,7 +275,7 @@ final class AppSwitcher: ObservableObject {
         } else if userNavigated {
             selectedIndex = min(selectedIndex, merged.count - 1)
         } else {
-            selectedIndex = initialSelectionIndex(in: merged, reversed: false)
+            selectedIndex = merged.count > 1 ? 1 : 0
         }
         grid = SwitcherGrid.compute(count: merged.count, on: screenWithMouse())
         resizePanel()
@@ -314,9 +345,11 @@ final class AppSwitcher: ObservableObject {
         let selection = windows.indices.contains(selectedIndex) ? windows[selectedIndex] : nil
         endSession()
         if let selection {
-            DispatchQueue.main.async {
-                WindowActivator.activate(selection)
-            }
+            recordUse(selection.id)
+            // Activate synchronously — the raise itself is immediate; the only
+            // slow part (a browser tab-select script) runs fire-and-forget so
+            // the window comes forward without waiting on it.
+            WindowActivator.activate(selection)
         }
     }
 

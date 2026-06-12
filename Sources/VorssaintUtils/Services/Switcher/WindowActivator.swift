@@ -15,12 +15,12 @@ private func _AXUIElementGetWindow(_ element: AXUIElement,
 /// Control carry the user there.
 enum WindowActivator {
     static func activate(_ item: SwitcherItem) {
+        // Raise immediately so the switch feels instant. For a browser tab the
+        // window comes forward right away and the tab-select script runs in
+        // parallel — never gating the visible switch on Apple Events latency.
+        raiseWindow(of: item)
         if case let .browserTab(tab) = item.kind {
-            BrowserTabService.shared.activate(tab) {
-                raiseWindow(of: item)
-            }
-        } else {
-            raiseWindow(of: item)
+            BrowserTabService.shared.selectTab(tab)
         }
     }
 
