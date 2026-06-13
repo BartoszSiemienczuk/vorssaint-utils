@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [2.4.7] - 2026-06-13
+
+### Changed
+- **The switcher is window-based.** ⌘Tab now moves between windows, including
+  multiple windows of the same app, and a quick flick returns to the last window
+  you used. The browser-tabs entries were removed
+
+### Fixed
+- **Full Disk Access banner** no longer lingers after you grant it: the app
+  re-checks when it regains focus and offers a Relaunch button (the access only
+  applies to a freshly launched app)
+- **Onboarding**: shortcut keys no longer overlap their description text
+
 ## [2.4.6] - 2026-06-12
 
 ### Changed
