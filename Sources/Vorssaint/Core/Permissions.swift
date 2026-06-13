@@ -81,23 +81,40 @@ final class Permissions: ObservableObject {
     /// Full Disk Access has no prompt API, and an app only shows up (toggled
     /// off) in its System Settings list once it has *attempted* to read a
     /// protected location. So touch a few data-vault paths to register the app,
-    /// then open the pane — now the toggle is there to flip on.
+    /// then open the pane. Two things make this reliable: the TCC database read
+    /// always fires (that file always exists and is always FDA-gated), and the
+    /// pane opens only after a short delay so tccd has recorded the denial before
+    /// System Settings reads the list. If it still does not appear, the user can
+    /// add the app with the list's "+" button (see the hint under the button).
     func requestFullDiskAccess() {
         DispatchQueue.global(qos: .userInitiated).async {
             let home = NSHomeDirectory()
             let fm = FileManager.default
-            let probes = [
-                "Library/Application Support/com.apple.TCC/TCC.db",
+            // The TCC database is the dependable trigger: it always exists and a
+            // read is always denied without Full Disk Access. Reading it is what
+            // registers the app with tccd.
+            let tccDB = (home as NSString)
+                .appendingPathComponent("Library/Application Support/com.apple.TCC/TCC.db")
+            _ = try? Data(contentsOf: URL(fileURLWithPath: tccDB), options: .mappedIfSafe)
+            if let handle = FileHandle(forReadingAtPath: tccDB) {
+                _ = try? handle.read(upToCount: 1)
+                try? handle.close()
+            }
+            // A few more protected locations, harmless when absent.
+            let dirs = [
+                "Library/Application Support/com.apple.TCC",
                 "Library/Safari",
+                "Library/Mail",
+                "Library/Messages",
                 "Library/Cookies",
                 "Library/Application Support/MobileSync",
             ].map { (home as NSString).appendingPathComponent($0) }
-            // The denied attempt itself is what registers the app with TCC.
-            for path in probes {
-                _ = try? fm.contentsOfDirectory(atPath: path)
-                if let handle = FileHandle(forReadingAtPath: path) { try? handle.close() }
+            for path in dirs { _ = try? fm.contentsOfDirectory(atPath: path) }
+
+            // Let tccd persist the denial before the pane loads its list.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                self.openFullDiskAccessSettings()
             }
-            DispatchQueue.main.async { self.openFullDiskAccessSettings() }
         }
     }
 

@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [2.5.2] - 2026-06-13
+
+### Fixed
+- **Granting Full Disk Access from the uninstaller is reliable now.** The app
+  registered itself with the system and opened the settings pane in the same
+  instant, so it was often missing from the list. It now reads the always-present
+  TCC database (the dependable trigger) and waits for the system to record the
+  request before opening the pane. The hint also explains the sure path: if the
+  app is not listed, add it with the list's "+" button from Applications
+
 ## [2.5.1] - 2026-06-13
 
 ### Fixed
