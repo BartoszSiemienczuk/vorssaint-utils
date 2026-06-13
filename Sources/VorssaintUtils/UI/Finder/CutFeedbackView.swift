@@ -77,7 +77,7 @@ struct CutFeedbackView: View {
 
     // MARK: Move confirmed
 
-    private func resultBody(_ result: CutPasteResultStyle) -> some View {
+    private func resultBody(_ result: FinderCutPaste.MoveResult) -> some View {
         HStack(spacing: 10) {
             Image(systemName: result.failed == 0 ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                 .font(.system(size: 20))
@@ -102,7 +102,3 @@ struct CutFeedbackView: View {
         count == 1 ? l10n.s.cutMovedSingular : String(format: l10n.s.cutMovedPluralFormat, count)
     }
 }
-
-/// Lets the view read `MoveResult` fields without importing the service's
-/// nested type name everywhere.
-private typealias CutPasteResultStyle = FinderCutPaste.MoveResult

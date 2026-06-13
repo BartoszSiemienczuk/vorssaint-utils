@@ -134,8 +134,15 @@ final class FinderCutPaste: ObservableObject {
             if !marked.isEmpty { clearMarks() }
             return Unmanaged.passUnretained(event)
         case Key.v:
-            guard !marked.isEmpty, NSPasteboard.general.changeCount == markedChangeCount else {
+            guard !marked.isEmpty else {
                 return Unmanaged.passUnretained(event) // nothing of ours to move → normal paste
+            }
+            guard NSPasteboard.general.changeCount == markedChangeCount else {
+                // Something else wrote to the pasteboard since the cut — the
+                // cut is dead, so drop the marks (and the HUD) and let the
+                // normal paste happen.
+                clearMarks()
+                return Unmanaged.passUnretained(event)
             }
             pasteAsync()
             return nil
@@ -150,7 +157,10 @@ final class FinderCutPaste: ObservableObject {
         let system = AXUIElementCreateSystemWide()
         var focused: CFTypeRef?
         guard AXUIElementCopyAttributeValue(system, "AXFocusedUIElement" as CFString, &focused) == .success,
-              let focused else { return false }
+              let focused,
+              // Type-check before casting: this runs inside the event tap, so
+              // an unexpected CF type must degrade gracefully, never crash.
+              CFGetTypeID(focused) == AXUIElementGetTypeID() else { return false }
         let element = focused as! AXUIElement
         var roleRef: CFTypeRef?
         guard AXUIElementCopyAttributeValue(element, "AXRole" as CFString, &roleRef) == .success,
@@ -272,7 +282,7 @@ final class FinderCutPaste: ObservableObject {
         let view = panel.contentViewController!.view
         view.layoutSubtreeIfNeeded()
         let size = view.fittingSize
-        let screen = screenWithMouse().visibleFrame
+        let screen = NSScreen.withMouse.visibleFrame
         let frame = NSRect(x: screen.midX - size.width / 2,
                            y: screen.maxY - size.height - 14,
                            width: size.width, height: size.height)
@@ -297,11 +307,6 @@ final class FinderCutPaste: ObservableObject {
         panel.contentViewController = host
         self.panel = panel
         return panel
-    }
-
-    private func screenWithMouse() -> NSScreen {
-        let mouse = NSEvent.mouseLocation
-        return NSScreen.screens.first { $0.frame.contains(mouse) } ?? NSScreen.main ?? NSScreen.screens[0]
     }
 }
 
