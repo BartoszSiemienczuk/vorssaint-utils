@@ -131,18 +131,23 @@ struct ShowcaseScaffold<Hero: View, Footer: View>: View {
 
     @ViewBuilder
     private func row(_ row: HowToRow) -> some View {
+        // Keys take their natural width (a 4-key combo like ⌃⌥⌘D must never be
+        // clipped into the text), and the text wraps in whatever space is left,
+        // so nothing overlaps at any scale or language.
         HStack(alignment: .top, spacing: 10) {
             if let keys = row.keys {
-                ShortcutCaps(keys: keys).frame(width: 64, alignment: .leading)
+                ShortcutCaps(keys: keys)
             } else {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 12))
                     .foregroundStyle(.tint)
-                    .frame(width: 64, alignment: .leading)
+                    .frame(width: 22, alignment: .leading)
+                    .padding(.top, 1)
             }
             Text(row.text)
                 .font(.system(size: 12.5))
                 .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
         }
     }
 }
