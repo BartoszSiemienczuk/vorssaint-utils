@@ -294,15 +294,31 @@ private struct CutPasteHero: View {
 private struct AutoQuitHero: View {
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "macwindow")
-                .font(.system(size: 50, weight: .light))
-                .overlay(alignment: .topLeading) {
-                    Circle().fill(Color.red).frame(width: 9, height: 9).padding(8)
-                }
+            WindowGlyph()
             Image(systemName: "arrow.right").font(.system(size: 18, weight: .semibold)).opacity(0.7)
             Image(systemName: "checkmark.seal.fill").font(.system(size: 40))
         }
         .foregroundStyle(.white)
+    }
+}
+
+/// A small window with its three title-bar buttons, the close one highlighted.
+/// Drawn by hand so the buttons stay aligned in the title bar at any scale. A
+/// red circle overlaid on the `macwindow` symbol used to land off in the corner.
+private struct WindowGlyph: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
+            .strokeBorder(.white, lineWidth: 3.5)
+            .frame(width: 52, height: 40)
+            .overlay(alignment: .topLeading) {
+                HStack(spacing: 4) {
+                    Circle().fill(.red).frame(width: 6, height: 6)
+                    Circle().fill(.white.opacity(0.55)).frame(width: 6, height: 6)
+                    Circle().fill(.white.opacity(0.55)).frame(width: 6, height: 6)
+                }
+                .padding(.leading, 8)
+                .padding(.top, 7)
+            }
     }
 }
 

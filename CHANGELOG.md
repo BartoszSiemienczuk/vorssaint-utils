@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [2.7.2] - 2026-06-14
+
+### Fixed
+- On the "Quit on last window close" onboarding illustration, the red close
+  button now sits aligned with the other window buttons, instead of off in the
+  corner of the window.
+
 ## [2.7.1] - 2026-06-14
 
 ### Changed
