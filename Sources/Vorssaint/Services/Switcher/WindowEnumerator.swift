@@ -11,7 +11,7 @@ import CoreGraphics
 /// are minimized or parked on other Spaces are included. The result is then
 /// ordered by the app activation MRU (see `AppActivationTracker`), so the
 /// switcher matches the system ⌘Tab toggle. Window titles require Screen
-/// Recording on modern macOS; Vorssaint's own titled windows use NSWindow
+/// Recording on modern macOS; Borssaint's own titled windows use NSWindow
 /// metadata so Settings remains reachable even though the app is a menu-bar
 /// accessory.
 enum WindowEnumerator {

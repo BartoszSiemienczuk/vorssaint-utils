@@ -23,7 +23,11 @@ final class UpdateService: ObservableObject {
     @Published private(set) var state: State = .idle
     @Published private(set) var lastChecked: Date?
 
-    private let repository = "vorssaint/vorssaint-utils"
+    // Fork's own update feed. The dev build never auto-updates anyway (see
+    // startAutomaticChecks), and this fork is unsigned/un-notarized so the
+    // signature gate in launchInstaller would reject any download — OTA is
+    // effectively off for the fork.
+    private let repository = "BartoszSiemienczuk/vorssaint-utils"
     private var downloadURL: URL?
     private var refreshTimer: Timer?
     private var notifiedVersion: String?   // last release we posted a notification for
@@ -90,7 +94,7 @@ final class UpdateService: ObservableObject {
 
         var request = URLRequest(url: URL(string: "https://api.github.com/repos/\(repository)/releases/latest")!)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("Vorssaint/\(AppInfo.version)", forHTTPHeaderField: "User-Agent")
+        request.setValue("Borssaint/\(AppInfo.version)", forHTTPHeaderField: "User-Agent")
         request.cachePolicy = .reloadIgnoringLocalCacheData
 
         URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
@@ -158,7 +162,7 @@ final class UpdateService: ObservableObject {
             }
             // Move out of the URL session's scratch space before handing off.
             let dmgURL = FileManager.default.temporaryDirectory
-                .appendingPathComponent("Vorssaint-update.dmg")
+                .appendingPathComponent("Borssaint-update.dmg")
             try? FileManager.default.removeItem(at: dmgURL)
             do {
                 try FileManager.default.moveItem(at: tempURL, to: dmgURL)
@@ -210,7 +214,7 @@ final class UpdateService: ObservableObject {
                 # Clear ALL xattrs (quarantine + FinderInfo the DMG round-trip
                 # adds): FinderInfo breaks strict signature verification.
                 /usr/bin/xattr -cr "$STAGE" 2>/dev/null
-                VERIFY_REQ='identifier "com.vorssaint.utils" and anchor apple generic and certificate leaf[subject.OU] = "3D485NHW29"'
+                VERIFY_REQ='identifier "pl.jbsoftware.borssaint" and anchor apple generic and certificate leaf[subject.OU] = "3D485NHW29"'
                 if /usr/bin/codesign -v --deep --strict -R="$VERIFY_REQ" "$STAGE" 2>/dev/null \
                     && /usr/sbin/spctl -a -t exec "$STAGE" >/dev/null 2>&1; then
                     BACKUP="$DEST.update-old"

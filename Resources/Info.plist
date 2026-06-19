@@ -5,17 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
-	<string>Vorssaint</string>
+	<string>Borssaint</string>
 	<key>CFBundleExecutable</key>
-	<string>Vorssaint</string>
+	<string>Borssaint</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.vorssaint.utils</string>
+	<string>pl.jbsoftware.borssaint</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Vorssaint</string>
+	<string>Borssaint</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -33,9 +33,9 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>O Vorssaint controla o Finder para mover arquivos recortados e para enviar itens à Lixeira no desinstalador.</string>
+	<string>O Borssaint controla o Finder para mover arquivos recortados e para enviar itens à Lixeira no desinstalador.</string>
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>Vorssaint intercepta o áudio de apps individuais apenas para ajustar o volume de cada um no mixer. Nada é gravado nem sai do seu Mac.</string>
+	<string>Borssaint intercepta o áudio de apps individuais apenas para ajustar o volume de cada um no mixer. Nada é gravado nem sai do seu Mac.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Vorssaint</string>
 	<key>NSPrincipalClass</key>

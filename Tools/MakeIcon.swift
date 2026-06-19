@@ -98,9 +98,12 @@ func renderAppIcon(px: Int) -> Data? {
 
     NSGraphicsContext.saveGraphicsState()
     squircle.addClip()
+    // Fork tint: a subtle blue squircle so Borssaint is visually distinct from
+    // the (near-white) upstream Vorssaint icon, as the fork branding requires.
+    // The mark stays dark, so it still reads clearly over the light blue.
     NSGradient(colors: [
-        NSColor(calibratedWhite: 0.99, alpha: 1),
-        NSColor(calibratedWhite: 0.93, alpha: 1),
+        NSColor(calibratedRed: 0.90, green: 0.95, blue: 1.00, alpha: 1),
+        NSColor(calibratedRed: 0.78, green: 0.87, blue: 0.98, alpha: 1),
     ])?.draw(in: bgRect, angle: -90)
     drawMark(into: bgRect.insetBy(dx: bgRect.width * 0.115, dy: bgRect.height * 0.115))
     NSGraphicsContext.restoreGraphicsState()

@@ -95,9 +95,9 @@ final class ShelfService: ObservableObject {
     }
 
     private let tempDir: URL = {
-        let id = Bundle.main.bundleIdentifier ?? "com.vorssaint.utils"
+        let id = Bundle.main.bundleIdentifier ?? "pl.jbsoftware.borssaint"
         let dir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("VorssaintShelf", isDirectory: true)
+            .appendingPathComponent("BorssaintShelf", isDirectory: true)
             .appendingPathComponent(id, isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
@@ -820,7 +820,7 @@ final class ShelfService: ObservableObject {
 
     private func cleanLegacyTemporaryFiles() {
         let legacyDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("VorssaintShelf", isDirectory: true)
+            .appendingPathComponent("BorssaintShelf", isDirectory: true)
         guard legacyDir != tempDir,
               let entries = try? FileManager.default.contentsOfDirectory(at: legacyDir,
                                                                          includingPropertiesForKeys: nil)

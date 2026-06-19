@@ -45,7 +45,7 @@ final class StatusItemController {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         // A stable identity so macOS remembers the item's position across launches
         // and across rebuilds, instead of re-placing it at the crowded default spot.
-        statusItem.autosaveName = "VorssaintMenuBarItem"
+        statusItem.autosaveName = "BorssaintMenuBarItem"
         statusItem.behavior = []
         statusItem.isVisible = true
         if let button = statusItem.button {

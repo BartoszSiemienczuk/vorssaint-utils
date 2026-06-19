@@ -5,10 +5,13 @@ import Foundation
 
 /// Static identity of the app, shared by UI, notifications and tooling.
 enum AppInfo {
-    static let name = "Vorssaint"
+    static let name = "Borssaint"
+    // Borssaint is a personal fork of Vorssaint. The displayed copyright is kept
+    // pointing at the original author to honour the GPL attribution requirement;
+    // only the user-facing product name and links are rebranded.
     static let copyright = "© 2026 Vorssaint"
-    static let websiteURL = URL(string: "https://vorssaint.com")!
-    static let repositoryURL = URL(string: "https://github.com/vorssaint/vorssaint-utils")!
+    static let websiteURL = URL(string: "https://github.com/BartoszSiemienczuk/vorssaint-utils")!
+    static let repositoryURL = URL(string: "https://github.com/BartoszSiemienczuk/vorssaint-utils")!
     /// Buy Me a Coffee page. The project stays free; donations and stars are how
     /// the community keeps it alive. Confirm the handle is exactly right before
     /// shipping to main.
@@ -20,7 +23,7 @@ enum AppInfo {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "dev"
     }
 
-    /// True for the local "Vorssaint (Developer)" build (bundle id ends in `.dev`).
+    /// True for the local "Borssaint (Developer)" build (bundle id ends in `.dev`).
     /// It is never published and never auto-updates; all work is tested here first.
     static var isDeveloperBuild: Bool {
         (Bundle.main.bundleIdentifier ?? "").hasSuffix(".dev")

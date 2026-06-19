@@ -57,7 +57,7 @@ final class AppVolumeMixer: ObservableObject {
     private var runningListeners = Set<AudioObjectID>()
     private var currentOutputDeviceUID: String?
     private var stopped = false
-    private let buildQueue = DispatchQueue(label: "com.vorssaint.utils.mixer", qos: .userInitiated)
+    private let buildQueue = DispatchQueue(label: "pl.jbsoftware.borssaint.mixer", qos: .userInitiated)
 
     private init() {}
 
@@ -411,7 +411,7 @@ private final class TapGainEngine: GainEngine {
         }
 
         let aggregate: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "Vorssaint Mixer",
+            kAudioAggregateDeviceNameKey: "Borssaint Mixer",
             kAudioAggregateDeviceUIDKey: UUID().uuidString,
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceMainSubDeviceKey: outputUID,
