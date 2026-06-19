@@ -391,6 +391,11 @@ struct AboutSettings: View {
                 Text("\(l10n.s.versionPrefix) \(AppInfo.version)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                // Fork marker: confirms this build came from my personal fork
+                // and not the official release. Harmless cosmetic change.
+                Text("Personal fork")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
                 if AppInfo.isDeveloperBuild, let commit = AppInfo.buildCommit {
                     // Dev-only: which source commit this build came from. Never shipped.
                     Text(commit)
