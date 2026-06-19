@@ -1,15 +1,20 @@
-# Vorssaint
+# Borssaint
 
 > O conjunto de utilitários gratuito e open source que substitui vários apps pagos do Mac.
 
-<p align="center"><strong><a href="https://vorssaint.com">vorssaint.com</a></strong></p>
+> [!NOTE]
+> **Borssaint é um fork pessoal** do [Vorssaint](https://github.com/vorssaint/vorssaint-utils)
+> pela JB Software, rebatizado conforme o [TRADEMARKS.md](../TRADEMARKS.md) original. Todo o
+> crédito do app original é do projeto Vorssaint; o código permanece sob GPL-3.0-or-later.
+
+<p align="center"><strong><a href="https://github.com/BartoszSiemienczuk/vorssaint-utils">github.com/BartoszSiemienczuk/vorssaint-utils</a></strong></p>
 
 *Read in [English](../README.md).*
 
 <p align="center">🇺🇸 🇧🇷 🇪🇸 🇩🇪 🇫🇷 🇮🇹 🇯🇵 🇨🇳</p>
 <p align="center"><sub>A interface fala 8 idiomas, troque quando quiser nos Ajustes.</sub></p>
 
-Se o Vorssaint te ajuda, uma ⭐ rápida significa muito e ainda ajuda mais gente a encontrar o projeto. Ele é, e sempre será, 100% gratuito e sem assinatura; o apoio da comunidade é o que mantém tudo vivo, então se quiser ajudar você também pode [me pagar um café](https://buymeacoffee.com/vorssaint) ☕.
+Se o Borssaint te ajuda, uma ⭐ rápida significa muito e ainda ajuda mais gente a encontrar o projeto. Ele é, e sempre será, 100% gratuito e sem assinatura; o apoio da comunidade é o que mantém tudo vivo, então se quiser ajudar você também pode [me pagar um café](https://buymeacoffee.com/vorssaint) ☕.
 
 Um app pequeno na barra de menus que faz o trabalho para o qual você instalaria
 (e pagaria) vários utilitários separados: manter o Mac acordado, ver o que está
@@ -20,13 +25,16 @@ entre apps, remover sobras e resolver algumas chatices do dia a dia.
 Nada sai do seu Mac, exceto uma verificação de atualização que você pode
 desligar. É feito com frameworks nativos do macOS, então fica pequeno e rápido.
 
-**Instale com o [Homebrew](https://brew.sh):**
+**Compile a partir do código-fonte** (este fork não tem cask do Homebrew nem release notarizada):
 
 ```sh
-brew install --cask vorssaint/tap/vorssaint
+git clone https://github.com/BartoszSiemienczuk/vorssaint-utils.git
+cd vorssaint-utils
+./Tools/setup-signing.sh    # uma vez: cria a identidade autoassinada estável
+./build.sh --dev --install  # compila e instala o "Borssaint (Developer)"
 ```
 
-Já tem o Vorssaint instalado? Adote a sua cópia no Homebrew sem reinstalar: `brew install --cask --adopt vorssaint/tap/vorssaint`. Você também pode [baixar o .dmg](https://github.com/vorssaint/vorssaint-utils/releases).
+Como o fork é autoassinado (não notarizado pela Apple), na primeira execução pode aparecer um aviso do Gatekeeper — clique com o botão direito no app e escolha **Abrir** uma vez. Para trazer as mudanças do upstream e recompilar, rode `./refresh-fork.sh`.
 
 ## O que ele faz
 
@@ -126,39 +134,30 @@ Os recursos podem ser ajustados pelos Ajustes ou direto pelo painel.
 
 ## Instalação
 
-### Homebrew (recomendado)
-```sh
-brew install --cask vorssaint/tap/vorssaint
-```
-Já tem o Vorssaint instalado e não quer reinstalar? Adote a sua cópia no
-Homebrew:
-```sh
-brew install --cask --adopt vorssaint/tap/vorssaint
-```
-Depois disso, as atualizações chegam por `brew upgrade --cask vorssaint`.
-
-### Download
-Baixe o DMG mais recente em [**Releases**](https://github.com/vorssaint/vorssaint-utils/releases),
-abra e arraste o **Vorssaint** para **Aplicativos**.
-
-O Vorssaint é assinado com um Developer ID e notarizado pela Apple, então abre
-normalmente, sem aviso de segurança. A assinatura estável também mantém as
-permissões concedidas entre as atualizações.
-
-### Builds oficiais e forks
-Builds oficiais do Vorssaint são distribuídos apenas pelo mantenedor do projeto.
-Forks não oficiais devem usar outro nome, ícone, bundle identifier e identidade
-de assinatura. A GPL cobre apenas o código-fonte e não concede permissão para
-usar o nome Vorssaint, logo, ícone, identidade de bundle, trade dress ou
-branding oficial. Veja [TRADEMARKS.md](../TRADEMARKS.md).
+Este fork é **compilado a partir do código-fonte** — não há cask do Homebrew nem
+release notarizada. Como é autoassinado (não notarizado pela Apple), na primeira
+execução o Gatekeeper pode pedir confirmação: clique com o botão direito no app e
+escolha **Abrir** uma vez. A identidade autoassinada estável mantém as permissões
+concedidas entre recompilações.
 
 ### Compilar do código
 ```sh
-git clone https://github.com/vorssaint/vorssaint-utils.git
+git clone https://github.com/BartoszSiemienczuk/vorssaint-utils.git
 cd vorssaint-utils
-./build.sh            # compila, gera o ícone e monta o bundle assinado
-./build.sh --install  # idem, depois instala em /Aplicativos e abre
+./Tools/setup-signing.sh    # uma vez: cria a identidade autoassinada estável
+./build.sh --dev --install  # compila e instala o "Borssaint (Developer)"
 ```
+Compile sempre com `--dev`: o app instala como "Borssaint (Developer)", com bundle
+id próprio, então coexiste com o app oficial e o autoatualizador fica desativado.
+Rode `./refresh-fork.sh` para trazer as mudanças do upstream e recompilar.
+
+### Builds oficiais e forks
+Este é um fork pessoal do [Vorssaint](https://github.com/vorssaint/vorssaint-utils).
+Builds oficiais do Vorssaint são distribuídos apenas pelo mantenedor do projeto
+original. Forks não oficiais devem usar outro nome, ícone, bundle identifier e
+identidade de assinatura. A GPL cobre apenas o código-fonte e não concede permissão
+para usar o nome Vorssaint, logo, ícone, identidade de bundle, trade dress ou
+branding oficial. Veja [TRADEMARKS.md](../TRADEMARKS.md).
 
 ### Requisitos
 - macOS 14 (Sonoma) ou mais recente
@@ -193,7 +192,7 @@ página opcional por recurso). Reveja quando quiser em **Ajustes › Sobre**.
 Encerra o app, remove o item de início, redefine as permissões de Acessibilidade
 e Gravação de Tela, apaga o app, as preferências e o estado salvo, e remove a
 regra `sudoers` opcional de tampa fechada, sem deixar nada para trás. Ou arraste
-o app para a Lixeira e rode `tccutil reset All com.vorssaint.utils` para limpar
+o app para a Lixeira e rode `tccutil reset All pl.jbsoftware.borssaint` para limpar
 as permissões.
 
 ## Licença

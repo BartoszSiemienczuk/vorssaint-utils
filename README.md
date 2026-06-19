@@ -1,21 +1,26 @@
-# Vorssaint
+# Borssaint
 
 > One small menu bar app that replaces a whole stack of paid Mac utilities.
 
+> [!NOTE]
+> **Borssaint is a personal fork** of [Vorssaint](https://github.com/vorssaint/vorssaint-utils)
+> by JB Software, rebranded per the upstream [TRADEMARKS.md](TRADEMARKS.md). All credit for the
+> original app goes to the Vorssaint project; the source remains GPL-3.0-or-later.
+
 <p align="center">
-  <a href="https://vorssaint.com"><strong>vorssaint.com</strong></a>
+  <a href="https://github.com/BartoszSiemienczuk/vorssaint-utils"><strong>github.com/BartoszSiemienczuk/vorssaint-utils</strong></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/vorssaint/vorssaint-utils/releases"><img src="https://img.shields.io/github/v/release/vorssaint/vorssaint-utils?label=release" alt="Latest release"></a>
-  <a href="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml"><img src="https://github.com/vorssaint/vorssaint-utils/actions/workflows/ci.yml/badge.svg?branch=main&event=push" alt="CI status"></a>
+  <a href="https://github.com/BartoszSiemienczuk/vorssaint-utils/releases"><img src="https://img.shields.io/github/v/release/BartoszSiemienczuk/vorssaint-utils?label=release" alt="Latest release"></a>
+  <a href="https://github.com/BartoszSiemienczuk/vorssaint-utils/actions/workflows/ci.yml"><img src="https://github.com/BartoszSiemienczuk/vorssaint-utils/actions/workflows/ci.yml/badge.svg?branch=main&event=push" alt="CI status"></a>
   <a href="#what-you-need"><img src="https://img.shields.io/badge/macOS-14%2B%20(Apple%20Silicon)-black" alt="macOS 14 and newer, Apple Silicon"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL%203.0%20or%20later-blue" alt="License GPL 3.0 or later"></a>
 </p>
 
 <p align="center"><sub>Também disponível em <a href="docs/README.pt-BR.md">Português (Brasil)</a>.</sub></p>
 
-Vorssaint is the one menu bar app that does the work of a whole shelf of paid Mac tools. Per app volume, a full system monitor, a window switcher, a file shelf, an app uninstaller, link cleaning, keep awake and a handful more, all living behind a single icon up in your menu bar. Install it once and stop paying for and juggling a pile of single purpose apps. It runs entirely on your Mac and stays out of your way. Free, open source, no account, no subscription and no telemetry.
+Borssaint is the one menu bar app that does the work of a whole shelf of paid Mac tools. Per app volume, a full system monitor, a window switcher, a file shelf, an app uninstaller, link cleaning, keep awake and a handful more, all living behind a single icon up in your menu bar. Install it once and stop paying for and juggling a pile of single purpose apps. It runs entirely on your Mac and stays out of your way. Free, open source, no account, no subscription and no telemetry.
 
 ## Everything in one menu bar app
 
@@ -23,7 +28,7 @@ Here is the whole toolkit. Every part can be turned on or off, so you keep what 
 
 ### 🎚️ Per app volume, the one people reach for first
 
-Vorssaint puts a real mixer in your menu bar, so you can slide any single app up or down while the rest of your Mac stays exactly where it was. Mute a loud video and let your music keep playing. Lift a quiet call without turning everything else up. There is no extra audio driver to install and nothing to set up first.
+Borssaint puts a real mixer in your menu bar, so you can slide any single app up or down while the rest of your Mac stays exactly where it was. Mute a loud video and let your music keep playing. Lift a quiet call without turning everything else up. There is no extra audio driver to install and nothing to set up first.
 
 <p align="center"><img src="docs/assets/readme/volume-mixer.png" alt="Per app volume mixer" width="540"></p>
 
@@ -63,29 +68,20 @@ Run a timer or stay up until you say stop. Closed lid mode is there for when you
 
 ### 🌍 Made to feel at home
 
-Vorssaint speaks eight languages and you can switch between them anytime in Settings. The compact panel lets you choose between a plain list and grouped sections, and you can tuck away the parts you rarely use, then bring them back from the same spot.
+Borssaint speaks eight languages and you can switch between them anytime in Settings. The compact panel lets you choose between a plain list and grouped sections, and you can tuck away the parts you rarely use, then bring them back from the same spot.
 
 ## Install
 
-The easiest way is with [Homebrew](https://brew.sh).
+Borssaint is a personal fork and is **built from source** — there is no Homebrew cask or
+notarized release. See [Build it yourself](#build-it-yourself) below.
 
-```sh
-brew install --cask vorssaint/tap/vorssaint
-```
-
-Already running Vorssaint and you would rather not reinstall it? Adopt your current copy into Homebrew with no download.
-
-```sh
-brew install --cask --adopt vorssaint/tap/vorssaint
-```
-
-From then on, updates arrive with `brew upgrade --cask vorssaint`. You can also grab the latest disk image from the [releases page](https://github.com/vorssaint/vorssaint-utils/releases), open it and drag Vorssaint into Applications.
-
-Vorssaint is signed with an Apple Developer ID and notarized by Apple, so it opens with no security warning, and that stable signing identity holds on to the permissions you grant across updates.
+Because the fork is self-signed rather than notarized by Apple, the first launch may show a
+Gatekeeper prompt — right-click the app and choose **Open** once to allow it. The stable
+self-signed identity means macOS keeps the permissions you grant across rebuilds.
 
 ## Private by default
 
-Vorssaint runs on your machine and asks for nothing it does not need. No account, no telemetry, no analytics and no tracking. The one request it makes on its own is a quiet check for a newer version, which you can switch off, and the speed test only reaches out when you press start. The whole story is written up in the [privacy notes](docs/PRIVACY.md).
+Borssaint runs on your machine and asks for nothing it does not need. No account, no telemetry, no analytics and no tracking. The one request it makes on its own is a quiet check for a newer version, which you can switch off, and the speed test only reaches out when you press start. The whole story is written up in the [privacy notes](docs/PRIVACY.md).
 
 Every macOS permission is optional, and the first run walks you through each one. A feature that is missing a permission simply stays quiet instead of breaking. Here is the short version, with the full picture in the [permissions guide](docs/PERMISSIONS.md).
 
@@ -108,13 +104,21 @@ Finder cut and paste and the uninstaller also ask macOS for Automation access th
 ### Build it yourself
 
 ```sh
-git clone https://github.com/vorssaint/vorssaint-utils.git
+git clone https://github.com/BartoszSiemienczuk/vorssaint-utils.git
 cd vorssaint-utils
-./build.sh            # compile, generate the icon and assemble the signed bundle
-./build.sh --install  # the same, then install into Applications and launch
+./Tools/setup-signing.sh    # once: create the stable self-signed identity
+./build.sh --dev --install  # build and install "Borssaint (Developer)"
 ```
 
-The [contributing guide](CONTRIBUTING.md) covers the layout and the conventions. Official Vorssaint builds come only from the maintainer. A fork has to use a different name, icon, bundle identity and signing identity, because the GPL covers the source code and not the Vorssaint name, logo or look. See [TRADEMARKS.md](TRADEMARKS.md).
+The fork is **always built with `--dev`**: it installs as "Borssaint (Developer)" with its own
+bundle id, so it coexists with the upstream app and its self-updater stays disabled (a plain
+`./build.sh` would produce the upstream-bundle-id build, which the official OTA updater can
+overwrite). Run `./refresh-fork.sh` to pull the latest upstream changes and rebuild.
+
+This is a personal fork of [Vorssaint](https://github.com/vorssaint/vorssaint-utils). Per the
+GPL, the source stays GPL-3.0-or-later and the Vorssaint name, logo and look remain the upstream
+project's — which is why this fork rebrands as Borssaint. See [TRADEMARKS.md](TRADEMARKS.md) and
+the [contributing guide](CONTRIBUTING.md).
 
 ## Troubleshooting
 
@@ -126,7 +130,7 @@ App blocked on first launch, a permission that will not take hold, or the switch
 ./Tools/uninstall.sh
 ```
 
-The script quits the app, drops the login item, resets its Accessibility and Screen Recording access, deletes the app along with its preferences and saved state, and removes the optional closed lid rule, so nothing is left behind. You can also drag the app to the Trash and run `tccutil reset All com.vorssaint.utils` to clear its permissions.
+The script quits the app, drops the login item, resets its Accessibility and Screen Recording access, deletes the app along with its preferences and saved state, and removes the optional closed lid rule, so nothing is left behind. You can also drag the app to the Trash and run `tccutil reset All pl.jbsoftware.borssaint` to clear its permissions.
 
 ## Documentation
 
@@ -143,7 +147,7 @@ Issues and pull requests are very welcome. The [contributing guide](CONTRIBUTING
 
 ## Support the project
 
-Vorssaint is free and it will stay that way. If it earns a place in your menu bar, a quick ⭐ helps other people find it. If you want to chip in beyond that you can [buy me a coffee](https://buymeacoffee.com/vorssaint), and either way the project lives on the community around it.
+Borssaint is free and it will stay that way. If it earns a place in your menu bar, a quick ⭐ helps other people find it. If you want to chip in beyond that you can [buy me a coffee](https://buymeacoffee.com/vorssaint), and either way the project lives on the community around it.
 
 ## License
 
